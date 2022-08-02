@@ -1,6 +1,6 @@
-const path = require('path');
+const path = require("path");
 const express = require("express");
-var favicon = require('serve-favicon');
+var favicon = require("serve-favicon");
 require("dotenv").config();
 const app = express();
 
@@ -13,23 +13,29 @@ var spotifyApi = new SpotifyWebApi({
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
-// Retrieve an access token.
-const accessToken = spotifyApi.getAccessToken();
-console.log(accessToken);
-if (!accessToken) {
-  console.log("checking access")
-  spotifyApi.clientCredentialsGrant().then(
-    function (data) {
-      // Save the access token so that it's used in future calls
-      spotifyApi.setAccessToken(data.body["access_token"]);
-    },
-    function (err) {
-      console.log("Something went wrong when retrieving an access token", err);
-    }
-  );
+function checkAccess() {
+  // Retrieve an access token.
+  const accessToken = spotifyApi.getAccessToken();
+  console.log(accessToken);
+  console.log(process.env.SPOTIFY_CLIENT_ID);
+  if (!accessToken) {
+    console.log("checking access");
+    spotifyApi.clientCredentialsGrant().then(
+      function (data) {
+        // Save the access token so that it's used in future calls
+        spotifyApi.setAccessToken(data.body["access_token"]);
+      },
+      function (err) {
+        console.log(
+          "Something went wrong when retrieving an access token",
+          err
+        );
+      }
+    );
+  }
 }
 
-app.set("port", PORT)
+app.set("port", PORT);
 
 app.get("/", (req, res) => {
   res.send("Hello Heroku");
@@ -37,6 +43,8 @@ app.get("/", (req, res) => {
 
 // Get Artist results from a search query
 app.get("/search/:query", (req, res) => {
+  checkAccess();
+
   const query = req.params.query;
   // Search artists whose name contains query params
   spotifyApi.searchArtists(query).then(
@@ -83,8 +91,14 @@ app.get("/albumTracks/:id", (req, res) => {
   );
 });
 
-app.listen(PORT, function(){
-  console.log("Express server listening on port %d in %s mode", PORT, app.settings.env);
+app.listen(PORT, function () {
+  console.log(
+    "Express server listening on port %d in %s mode",
+    PORT,
+    app.settings.env
+  );
 });
 
-app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
+app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
+
+checkAccess();
