@@ -2,7 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const app = express();
 
-const port = 3000;
+const PORT = process.env.PORT || 8080;
 
 var SpotifyWebApi = require("spotify-web-api-node");
 
@@ -24,6 +24,8 @@ if (!accessToken) {
     }
   );
 }
+
+app.set("port", PORT)
 
 app.get("/", (req, res) => {
   res.send("Hello Heroku");
@@ -74,8 +76,8 @@ app.get("/albumTracks/:id", (req, res) => {
   );
 });
 
-app.listen(process.env.PORT || 3000, function(){
-  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+app.listen(PORT, function(){
+  console.log("Express server listening on port %d in %s mode", PORT, app.settings.env);
 });
 
 app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
