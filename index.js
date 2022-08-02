@@ -81,3 +81,4 @@ app.listen(port, (error) => {
     console.log(`Server running at ${port}`);
   }
 });
+app.use(favicon(path.join(__dirname,'public','images','favicon.ico')));
