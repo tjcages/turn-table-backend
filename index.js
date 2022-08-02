@@ -1,5 +1,5 @@
 const express = require("express");
-require('dotenv').config()
+require("dotenv").config();
 const app = express();
 
 const port = 3000;
@@ -24,6 +24,10 @@ if (!accessToken) {
     }
   );
 }
+
+app.get("/", (req, res) => {
+  res.send("Hello Heroku");
+});
 
 // Get Artist results from a search query
 app.get("/search/:query", (req, res) => {
