@@ -11,15 +11,13 @@ var SpotifyWebApi = require("spotify-web-api-node");
 var spotifyApi = new SpotifyWebApi({
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  redirectUri: process.env.SPOTIFY_REDIRECT_URI,
 });
 
 function checkAccess() {
   // Retrieve an access token.
   const accessToken = spotifyApi.getAccessToken();
-  console.log(accessToken);
-  console.log(process.env.SPOTIFY_CLIENT_ID);
   if (!accessToken) {
-    console.log("checking access");
     spotifyApi.clientCredentialsGrant().then(
       function (data) {
         // Save the access token so that it's used in future calls
