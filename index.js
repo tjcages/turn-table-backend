@@ -15,7 +15,9 @@ var spotifyApi = new SpotifyWebApi({
 
 // Retrieve an access token.
 const accessToken = spotifyApi.getAccessToken();
+console.log(accessToken);
 if (!accessToken) {
+  console.log("checking access")
   spotifyApi.clientCredentialsGrant().then(
     function (data) {
       // Save the access token so that it's used in future calls
@@ -44,6 +46,7 @@ app.get("/search/:query", (req, res) => {
     },
     function (err) {
       console.error(err);
+      res.send(err.message);
     }
   );
 });
@@ -59,6 +62,7 @@ app.get("/artistAlbums/:id", (req, res) => {
     },
     function (err) {
       console.error(err);
+      res.send(err.message);
     }
   );
 });
@@ -74,6 +78,7 @@ app.get("/albumTracks/:id", (req, res) => {
     },
     function (err) {
       console.log("Something went wrong!", err);
+      res.send(err.message);
     }
   );
 });
