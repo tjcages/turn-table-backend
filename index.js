@@ -1,4 +1,5 @@
 const express = require("express");
+var favicon = require('serve-favicon');
 require("dotenv").config();
 const app = express();
 
