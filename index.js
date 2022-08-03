@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+var cors = require('cors');
 var favicon = require("serve-favicon");
 require("dotenv").config();
 const app = express();
@@ -35,6 +36,7 @@ function checkAccess() {
   }
 }
 
+app.use(cors());
 app.set("port", PORT);
 
 app.get("/", (req, res) => {
@@ -44,49 +46,17 @@ app.get("/", (req, res) => {
 // Get Artist results from a search query
 app.get("/search/:query", (req, res) => {
   const query = req.params.query;
-
-  // Retrieve an access token.
-  const accessToken = spotifyApi.getAccessToken();
-  if (!accessToken) {
-    spotifyApi.clientCredentialsGrant().then(
-      function (data) {
-        console.log("The access token expires in " + data.body["expires_in"]);
-        console.log("The access token is " + data.body["access_token"]);
-        // Save the access token so that it's used in future calls
-        spotifyApi.setAccessToken(data.body["access_token"]);
-
-        // Search artists whose name contains query params
-        spotifyApi.searchArtists(query).then(
-          function (data) {
-            console.log('Search artists by "Love"', data.body);
-            res.send(data.body);
-          },
-          function (err) {
-            console.error(err);
-            res.send(err.message);
-          }
-        );
-      },
-      function (err) {
-        console.log(
-          "Something went wrong when retrieving an access token",
-          err
-        );
-      }
-    );
-  } else {
-    // Search artists whose name contains query params
-    spotifyApi.searchArtists(query).then(
-      function (data) {
-        console.log('Search artists by "Love"', data.body);
-        res.send(data.body);
-      },
-      function (err) {
-        console.error(err);
-        res.send(err.message);
-      }
-    );
-  }
+  // Search artists whose name contains query params
+  spotifyApi.searchArtists(query).then(
+    function (data) {
+      console.log('Search artists by "Love"', data.body);
+      res.send(data.body);
+    },
+    function (err) {
+      console.error(err);
+      res.send(err.message);
+    }
+  );
 });
 
 // Get albums from artist id
