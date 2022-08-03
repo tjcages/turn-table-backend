@@ -1,6 +1,6 @@
 const path = require("path");
 const express = require("express");
-var cors = require('cors');
+var cors = require("cors");
 var favicon = require("serve-favicon");
 require("dotenv").config();
 const app = express();
@@ -36,7 +36,7 @@ function checkAccess() {
   }
 }
 
-app.use(cors());
+app.use(cors({ origin: true }));
 app.set("port", PORT);
 
 app.get("/", (req, res) => {
